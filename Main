@@ -47,7 +47,7 @@ local function runLoop(character)
 
         wait(1)
 
-        hrp.CFrame = CFrame.new(4220.290, 63.498, 753.261) + hrp.CFrame.RightVector * 2
+        hrp.CFrame = CFrame.new(4220.290, 65.498, 753.261) + hrp.CFrame.RightVector * 2
         task.wait(2.5)
 
         hrp.CFrame = CFrame.new(4255.977, 86.048, 825.973)
