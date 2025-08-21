@@ -1,6 +1,6 @@
 -- Load Orion Library
 local OrionLib = loadstring(game:HttpGet("https://raw.githubusercontent.com/jensonhirst/Orion/main/source"))()
-
+print("Loaded V1.1")
 -- Create main window
 local Window = OrionLib:MakeWindow({Name = "Executor Script", HidePremium = true, SaveConfig = true, ConfigFolder = "ExecutorConfig"})
 
@@ -47,7 +47,7 @@ local function runLoop(character)
 
         wait(1)
 
-        hrp.CFrame = CFrame.new(4220.290, 65.498, 753.261) + hrp.CFrame.RightVector * 2
+        hrp.CFrame = CFrame.new(4220.290, 70.498, 753.261) + hrp.CFrame.RightVector * 2
         task.wait(2.5)
 
         hrp.CFrame = CFrame.new(4255.977, 86.048, 825.973)
