@@ -45,10 +45,12 @@ local function runLoop(character)
         task.wait(4)
         hrp.Anchored = false
 
-        hrp.CFrame = CFrame.new(4220.290, 62.498, 753.261) + hrp.CFrame.RightVector * 2
+        wait(1)
+
+        hrp.CFrame = CFrame.new(4220.290, 63.498, 753.261) + hrp.CFrame.RightVector * 2
         task.wait(2.5)
 
-        hrp.CFrame = CFrame.new(4255.977, 48.201, 825.973)
+        hrp.CFrame = CFrame.new(4255.977, 86.048, 825.973)
         task.wait(1.5)
 
         local targetPosition = Vector3.new(6665.065, 31.972, 953.381)
