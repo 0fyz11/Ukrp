@@ -1,1 +1,162 @@
+-- Load Orion Library
+local OrionLib = loadstring(game:HttpGet("https://raw.githubusercontent.com/jensonhirst/Orion/main/source"))()
+print("Loaded V1.1")
+-- Create main window
+local Window = OrionLib:MakeWindow({Name = "Executor Script", HidePremium = true, SaveConfig = true, ConfigFolder = "ExecutorConfig"})
 
+-- Variables
+local looping = false
+local Players = game:GetService("Players")
+local VirtualInput = game:GetService("VirtualInputManager")
+local player = Players.LocalPlayer
+
+-- Main loop function
+local function runLoop(character)
+    wait(1.5)
+    local hrp = character:WaitForChild("HumanoidRootPart")
+    local cam = workspace.CurrentCamera
+
+    while looping and character.Parent do
+        -- TELEPORT & MOVEMENT
+        wait(1.5)
+        hrp.CFrame = CFrame.new(118.992, 5.123, 198.999)
+        cam.CameraType = Enum.CameraType.Scriptable
+        cam.CFrame = cam.CFrame * CFrame.Angles(0, math.rad(-90), 0)
+        cam.CameraType = Enum.CameraType.Custom
+
+        -- Prompt press
+        local promptToPress = workspace.Game.Script.Shops["Blackmarket dealer"]["Bloxy Grape"]:WaitForChild("CivShopPurchasePrompt")
+        for i = 1, 4 do
+            if not looping then break end
+            if promptToPress and promptToPress:IsA("ProximityPrompt") then
+                promptToPress:InputHoldBegin()
+                task.wait(1.1)
+                promptToPress:InputHoldEnd()
+                task.wait(0.2)
+            end
+        end
+
+        task.wait(2)
+        if not looping then break end
+
+        -- TELEPORT SEQUENCE
+        hrp.CFrame = CFrame.new(4048.656, 24.122, 1822.346)
+        hrp.Anchored = true
+        task.wait(4)
+        hrp.Anchored = false
+
+        wait(1)
+
+        hrp.CFrame = CFrame.new(4220.290, 70.498, 753.261) + hrp.CFrame.RightVector * 2
+        task.wait(1.5)
+
+        hrp.CFrame = CFrame.new(4255.977, 86.048, 825.973)
+        task.wait(0.5)
+
+        local targetPosition = Vector3.new(6665.065, 31.972, 953.381)
+        hrp.CFrame = CFrame.new(targetPosition)
+        cam.CameraType = Enum.CameraType.Scriptable
+        cam.CFrame = cam.CFrame * CFrame.Angles(0, math.rad(-90), 0)
+        cam.CameraType = Enum.CameraType.Custom
+
+        -- Click GUI
+        local screenWidth = workspace.CurrentCamera.ViewportSize.X
+        local screenHeight = workspace.CurrentCamera.ViewportSize.Y
+        local clickX = screenWidth * 0.75
+        local clickY = screenHeight * 0.5
+
+        for i = 1, 5 do
+            if not looping then break end
+            VirtualInput:SendMouseButtonEvent(clickX, clickY, 0, true, game, 1)
+            task.wait(0.05)
+            VirtualInput:SendMouseButtonEvent(clickX, clickY, 0, false, game, 1)
+            task.wait(0.05)
+        end
+
+        task.wait(1)
+        if not looping then break end
+
+        -- Civilian Sell GUI
+        wait(0.5)
+        local playerGui = player:WaitForChild("PlayerGui")
+        local sellGui = playerGui:WaitForChild("CivilianSellUI")
+        local canvas = sellGui:WaitForChild("Canvas")
+        local container = canvas:WaitForChild("Container")
+        local main = container:WaitForChild("Main")
+        local scrollFrame = main:WaitForChild("ScrollFrame")
+
+        local prompt = workspace.Game.AIs["French Illegal Dealer"].FR:WaitForChild("ContrabandSellPrompt")
+        local promptPart = prompt.Parent
+        hrp.CFrame = promptPart.CFrame + Vector3.new(0, 3, 0)
+        task.wait(0.2)
+
+        VirtualInput:SendKeyEvent(true, Enum.KeyCode.E, false, game)
+        task.wait(1.1)
+        VirtualInput:SendKeyEvent(false, Enum.KeyCode.E, false, game)
+        task.wait(0.3)
+
+        local unwantedNames = {"Tix", "Bloxy Cola", "Firework Box"}
+        for _, child in pairs(scrollFrame:GetChildren()) do
+            if child:IsA("ImageButton") and table.find(unwantedNames, child.Name) then
+                child:Destroy()
+            end
+        end
+
+        local sellX, sellY = 1290, 615
+        for i = 1, 10 do
+            if not looping then break end
+            VirtualInput:SendMouseButtonEvent(sellX, sellY, 0, true, game, 1)
+            task.wait(0.05)
+            VirtualInput:SendMouseButtonEvent(sellX, sellY, 0, false, game, 1)
+            task.wait(0.1)
+        end
+
+        wait(1.3)
+
+        local sellX1, sellY1 = 1655, 870
+        for i = 1, 10 do
+            if not looping then break end
+            VirtualInput:SendMouseButtonEvent(sellX1, sellY1, 0, true, game, 1)
+            task.wait(0.05)
+            VirtualInput:SendMouseButtonEvent(sellX1, sellY1, 0, false, game, 1)
+            task.wait(0.1)
+        end
+
+        task.wait(0.1)
+        if character:FindFirstChild("Head") then
+            character.Head:Destroy()
+        end
+
+        task.wait(2)
+    end
+end
+
+-- Toggle for looping
+Window:MakeTab({
+    Name = "Main",
+    Icon = "rbxassetid://4483345998",
+    PremiumOnly = false
+}):AddToggle({
+    Name = "Auto Loop",
+    Default = false,
+    Callback = function(value)
+        looping = value
+        if value and player.Character then
+            task.spawn(function()
+                runLoop(player.Character)
+            end)
+        end
+    end
+})
+
+-- Handle respawns
+player.CharacterAdded:Connect(function(newChar)
+    if looping then
+        task.spawn(function()
+            runLoop(newChar)
+        end)
+    end
+end)
+
+-- Init Orion
+OrionLib:Init()
